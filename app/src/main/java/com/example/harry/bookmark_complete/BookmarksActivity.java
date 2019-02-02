@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,9 +35,15 @@ public class BookmarksActivity extends AppCompatActivity {
         //savedInstanceState will contain bookmarks info when the activity is redrawn
         //refer to activity lifecycle
         if (savedInstanceState != null) {
+            //logging
+            Log.d(TAG, "onCreate: savedInstanceState is not null, fetching bookmarks from bundle");
+
             //gets the saved arraylist
             arrayList_bookmark = savedInstanceState.getStringArrayList("bookmarks");
         } else {
+            //logging
+            Log.d(TAG, "onCreate: savedInstanceState is null, creating new arrayList");
+
             //creates a new arraylist and put google in it
             arrayList_bookmark = new ArrayList<String>();
             arrayList_bookmark.add("Google" +
@@ -61,10 +68,18 @@ public class BookmarksActivity extends AppCompatActivity {
             //the position variable tells us which one was clicked
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //logging
+                Log.d(TAG, "onItemClick: listView item clicked, position "
+                        + Integer.toString(position)
+                        + ", item text: " + arrayAdapter_bookmark.getItem(position));
 
                 //parse the item text by its name and url
                 String title = arrayAdapter_bookmark.getItem(position).split("\n")[0];
                 String link = arrayAdapter_bookmark.getItem(position).split("\n")[1];
+
+                //logging
+                Log.d(TAG, "onItemClick: String split into title and link: ("
+                        + title + ") (" + link + ")" );
 
                 //toast to show which item clicked
                 Toast.makeText(BookmarksActivity.this,
@@ -88,6 +103,9 @@ public class BookmarksActivity extends AppCompatActivity {
     //useful to store information so that the activity can use when the activity restarts
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        //logging
+        Log.d(TAG, "onSaveInstanceState: saving the instance state");
+
         //store the arraylist data into the bundle key-value pair
         outState.putStringArrayList("bookmarks", arrayList_bookmark);
         super.onSaveInstanceState(outState);
@@ -96,15 +114,25 @@ public class BookmarksActivity extends AppCompatActivity {
     //called when the add button is clicked
     //takes the text from editText and adds them to the arrayAdapter
     public void onClick_addNewBookmark(View view) {
+        //logging
+        Log.d(TAG, "onClick_addNewBookmark: add button clicked");
+
         //get the text from the editTexts
         String title = editText_title.getText().toString();
         String URL = editText_URL.getText().toString();
 
+        //a little bit of validation
         //adds to the bookmark list only if both aren't empty strings
         if (!title.equals("") && !URL.equals("")) {
+            //logging
+            Log.d(TAG, "onClick_addNewBookmark: input valid");
+
             arrayAdapter_bookmark.add(title + "\n" + URL);
             Toast.makeText(this, "New Bookmark added", Toast.LENGTH_SHORT).show();
         } else {
+            //logging
+            Log.d(TAG, "onClick_addNewBookmark: input invalid");
+            
             Toast.makeText(this, "Please fill out the Title and URL boxes", Toast.LENGTH_LONG).show();
         }
 
