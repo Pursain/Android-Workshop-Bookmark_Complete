@@ -30,8 +30,6 @@ public class BookmarksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmarks);
 
-        ArrayList<String> a = new ArrayList<>();
-
         //Storing them in variables for later use
         editText_title = findViewById(R.id.editText_title);
         editText_URL = findViewById(R.id.editText_URL);
