@@ -10,7 +10,7 @@ For the Template Code:
 4. **If I had 100 items... do I make 100 textViews?** (Interacting with listView, ArrayList, ArrayAdapters)
 5. **Hardcoding is bad...** (Dynamically populating the listView)
 6. **Let's launch a link!** (Setting OnClickListeners to launch links with Uri and intents) 
-7. **I rotated my screen and it did what???** (Digging deeper into the activity lifecycle and saving information in the bundle)
+7. **Try adding an item and rotating the screen** (Digging deeper into the activity lifecycle and saving information in the bundle)
 
 ## 1. Exploring Android and the Android Studio IDE
 
@@ -239,9 +239,71 @@ Here is a possible implementation:
     }
 
 
-## 6. Let's launch a link! (Setting OnClickListeners to launch links with Uri and intents) 
+## 6. Let's launch a link! (Setting OnClickListeners to launch links with Uri and intent) 
+
+This next part is pretty cool. We are gonna add the capability to click on an entry in the ListView and it is going to launch the link in our default web browser: 
+
 <img src='https://github.com/Pursain/Bookmark_Complete/blob/master/github_media/launch_link.gif' title="TODO 1" width=''/>
 
-## 7. I rotated my screen and it did what??? (Digging deeper into the activity lifecycle and saving information in the bundle)
-<img src='https://github.com/Pursain/Bookmark_Complete/blob/master/github_media/with_bundleSave.gif' title="TODO 1" width=''/>
-<img src='https://github.com/Pursain/Bookmark_Complete/blob/master/github_media/without_bundleSave.gif' title="TODO 1" width=''/>
+There's no tasks for this section so just follow along.
+
+There are 3 things that needs to be done here:
+ - adding a OnClickListener to the ListView so that it can react when we click on an entry 
+ - parsing the entry to get just the link
+ - starting an intent with the link
+ 
+First things first, we need to add an OnClickListener to our ListView, it'll look like this:
+
+    listView_bookmark.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //this method is called when an item on the listView is clicked
+        }
+    });
+    
+This code looks a bit daunting but what it's doing is creating a new object called AdapterView.OnItemClickListener and setting that as the object we want to use for our ListView. The AdapterView.OnItemClickListener requires you to define the onItemClick() method. That onItemClick() method will be called whenever the user clicks on an entry in the ListView. The position parameter tells us which one the user clicked on which will be useful to us. 
+
+The second part is to parse the entry into just a link, this part is purely java, if it doesn't make sense, don't fret, just believe it works:
+
+    String link = arrayAdapter_bookmark.getItem(position).split("\n")[1];
+
+The last part is to create the intent with the link. In the past, we've used intents to move from activity to activity (this is called explicit intents). We are going to use something called implicit intents which makes Android decide what to do with the data we give it. We except that if we give it a link, it will open up the link in the brower. 
+
+    Intent intentToOpenLink = new Intent(Intent.ACTION_VIEW);
+    intentToOpenLink.setData(Uri.parse(link));
+    //starts the intent, does not check for validity tho :/
+    startActivity(intentToOpenLink);
+    
+Intent.ACTION_VIEW tells android to find the most reasonable way to handle the information at hand. The .setData() is used here to put the link data into the intent but before that, it must be formatted by the Uri with Uri.parse() to ensure the link is formatted properly. The last line is to start the intent. There are more intricacies at play here but its beyond the scope of this workshop. That's why Android is so cool, there's always more to know :)
+
+## 7. Try adding an item and rotating the screen (Digging deeper into the activity lifecycle and saving information in the bundle)
+
+There is one concept that is quite important that I would like to reiterate. The activity lifecycle of an Android app is something that should always be kept in mind when building an application. 
+
+<img src='https://github.com/Pursain/Bookmark_Complete/blob/master/github_media/android_lifecycle.png' title="TODO 1" width=''/> 
+
+There are many ways the an activity moves from one state to another. This can include calling an intent to move to another activity, pressing the home button and clicking back into the app from the most recents page. 
+
+One subtle event that changes the activity's current state in the lifecycle is when your device rotates and changes orientations, this actually causes the activity to destory itself and recreate it. On the user end, they expect data before they rotated the screen to be persistent to after they rotate the screen. One way to keep our data persistent is with the method onSaveInstanceState. It is called right before the onStop() method is called in our activity lifecycle. For our application, we want to make sure that the entries in the ListView stays consistent so we will store the ArrayList data into the Bundle, an object that gets passed around from one lifecycle to another:
+
+    protected void onSaveInstanceState(Bundle outState){
+        //store the arraylist data into the bundle key-value pair
+        outState.putStringArrayList("bookmarks", arrayList_bookmark);
+        super.onSaveInstanceState(outState);   
+    }
+    
+By adding this code, we can modify our onCreate(Bundle savedInstanceState) method to check if there is anything in the savedInstanceState and if theres is, initialize our arraylist with the arraylist saved in the bundle:
+    
+    //checks if there is anything in the bundle
+    if (savedInstanceState != null) {
+        //gets the saved arraylist if there is
+        arrayList_bookmark = savedInstanceState.getStringArrayList("bookmarks");
+    } else {
+        //creates a new arraylist and put google in by default 
+        arrayList_bookmark = new ArrayList<String>();
+        arrayList_bookmark.add("Google\nhttp://www.google.com");
+    }   
+
+The image on the left did not save the ArrayList into the bundle before it onStop() was called. The image on the right does and has code to get that information whenever onCreate() is called thus the persistence of the Youtube link:
+
+<img src='https://github.com/Pursain/Bookmark_Complete/blob/master/github_media/with_bundleSave.gif' title="TODO 1" width='49%'/> <img src='https://github.com/Pursain/Bookmark_Complete/blob/master/github_media/without_bundleSave.gif' title="TODO 1" width='49%'/>
