@@ -157,14 +157,87 @@ Let's say I want to show a list of contacts in my app. At this point, we've seen
 
 There are typically three elements at play when you are using a ListView. There is the ListView itself, a list of data, and an adapter inbetween to take the list of data and gives it to the ListView to display whenever its needed. For our purposes, we will be using a ListView, ArrayList, ArrayAdapter. 
 
-Here's what we are going to make using a ListView:
+The code below shows how they are pieced together:
+
+    //Creating an ArrayList of Strings and populating it
+    ArrayList<Strings> someArrayList = new ArrayList<Strings>();
+    someArrayList.add("Hello");
+    someArrayList.add("World");
+    
+    //Creating an ArrayAdapter passing in this, a built-in XML layout and the ArrayList
+    ArrayAdapter<String> someArrayAdapter = new ArrayAdapter<String>
+            (this, android.R.layout.simple_list_item_1, someArrayList);
+
+    //Obtain the ListView and connecting it to the ArrayAdapter
+    ListView someListView = findViewById(R.id.some_List_View);
+    someListView.setAdapter(someArrayAdapter);
+
+In our application, we're going to make a list of bookmarked links like such:
 
 <img src='https://github.com/Pursain/Bookmark_Complete/blob/master/github_media/listView.gif' title="TODO 1" width=''/>
 
-hello
+### Task 4: Connecting the Trio (ListView, ArrayList, ArrayAdapter)
+
+Before you get started, start by taking a look at the provided code in the BookmarksAcitivty.java and activity_bookmarks.xml. There is a bit of starter code already for you and the GUI is already implemented. 
+
+There will be three things that needs to be done to make it work:
+ - Initialize the arrayList_bookmark and add an entry containing a title and link seperated by a newline character (eg. "Google\nhttp://google.com")
+ - Initialize the arrayAdapter_bookmark with the built-in layout (android.R.layout.simple_list_item_1) and the ArrayList arrayList_bookmark
+ - Set listView_bookmark with the ArrayAdapter arrayAdapter_bookmark
+ 
+The resultant code should like this:
+   
+     arrayList_bookmark = new ArrayList<String>();
+     arrayList.add("Google\nhttp://www.google.com);
+     arrayAdapter_bookmark = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList_bookmark);
+     listView_bookmark.setAdapter(arrayAdapter_bookmark);
 
 ## 5. Hardcoding is bad... (Dynamically populating the listView)
+
+At this point, we've been able to add entries into the ArrayList but only at compile time. Let's make it so that the user is able to  add entries into the list. The XML layout already contains the necessary UI elements to acheive this with 2 EditText views and a button. 
+
+Before we get going, there is one thing to clarify. When the arraylist is altered (eg. a new entry is added) after the adapter has already been created, the arrayadapter has to be notified of any changes to the arraylist to reflect it on the ListView. To do that, you would call the function someArrayAdapter.notifyDataSetChanged():
+
+      //assume that someArrayAdapter has already been initialized with someArrayList
+      someArrayList.add("this text will not show up in the listView until arrayadapter is notified");
+      someArrayAdapter.notifyDataSetChanged();
+      
+As a side note, the ArrayAdapter has methods that allow you to edit the ArrayList entries to it directly:
+
+      someArrayAdapter.add("this text show up in the listView once it runs");
+
+Either implementation will work and has its use cases. 
+
+Back to the app, we want the user to be able to add entries like this:
+
 <img src='https://github.com/Pursain/Bookmark_Complete/blob/master/github_media/populate_listView.gif' title="TODO 1" width=''/>
+
+### Task 5: Edit the method onClick_addNewBookmark to add the text of the EditText into the ListView
+
+The format of the each entry should be: a title followed by a newline character followed by the link (eg. "Youtube\nhttp://youtube.com)
+
+There are 3 parts to this task
+ - getting the text inside the EditTexts and formatting it into a single String
+ - adding the formatted String to the ListView
+ - clear the EditText 
+ - (OPTIONAL) adding some input validation
+
+Here is a possible implementation:
+
+    public void onClick_addNewBookmark(View view) {
+    
+        String title = editText_title.getText().toString();
+        String URL = editText_URL.getText().toString();
+        
+        //a little bit of validation
+        if (!title.equals("") && !URL.equals("")) {
+            arrayAdapter_bookmark.add(title + "\n" + URL);
+        }
+        
+        editText_title.setText("");
+        editText_URL.setText("");
+    }
+
 
 ## 6. Let's launch a link! (Setting OnClickListeners to launch links with Uri and intents) 
 <img src='https://github.com/Pursain/Bookmark_Complete/blob/master/github_media/launch_link.gif' title="TODO 1" width=''/>
