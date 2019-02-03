@@ -7,7 +7,7 @@ For the Template Code:
 1. **Exploring Android and the Android Studio IDE**
 2. **Let's click for Zots** (Changing text with a button onClick)
 3. **It's time to move on to another activity** (Changing activities with intents)
-4. **So... do I make 100 textViews?** (Interactions between listView, ArrayList, ArrayAdapters)
+4. **If I had 100 items... do I make 100 textViews?** (Interacting with listView, ArrayList, ArrayAdapters)
 5. **Hardcoding is bad...** (Dynamically populating the listView)
 6. **Let's launch a link!** (Setting OnClickListeners to launch links with Uri and intents) 
 7. **I rotated my screen and it did what???** (Digging deeper into the activity lifecycle and saving information in the bundle)
@@ -151,8 +151,17 @@ Here's what the code should look like:
     
 If class name matches up and the button is connected, clicking the button should move you to the next activity :D
 
-## 4. So... do I make 100 textViews? (Interactions between listView, ArrayList, ArrayAdapters)
+## 4. If I had 100 items... do I make 100 textViews? (Interacting with listView, ArrayList, ArrayAdapters)
+
+Let's say I want to show a list of contacts in my app. At this point, we've seen how TextViews can display text for us. If I had just 5 contacts, I could make 5 TextViews, one for each item in the list and great, it works. But how about 10 contacts? 20 contacts? 100 contacts? There has to be a better way and luckily, there is. Android provides us with a view called ListView that lets you represent data in a long continous scrollable list. Although ListView is considered to be depreciated and replaced by the new RecyclerView, its still a great entry point to understanding Android and whip up something quick. 
+
+There are typically three elements at play when you are using a ListView. There is the ListView itself, a list of data, and an adapter inbetween to take the list of data and gives it to the ListView to display whenever its needed. For our purposes, we will be using a ListView, ArrayList, ArrayAdapter. 
+
+Here's what we are going to make using a ListView:
+
 <img src='https://github.com/Pursain/Bookmark_Complete/blob/master/github_media/listView.gif' title="TODO 1" width=''/>
+
+hello
 
 ## 5. Hardcoding is bad... (Dynamically populating the listView)
 <img src='https://github.com/Pursain/Bookmark_Complete/blob/master/github_media/populate_listView.gif' title="TODO 1" width=''/>
