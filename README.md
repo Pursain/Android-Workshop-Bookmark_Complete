@@ -1,7 +1,7 @@
 # Bookmark_Complete
 This is the complete code for the Intro to Android Development for HackUCI 2019
 
-For the Template Code:
+For the Template Code: https://github.com/Pursain/Bookmark_Template
 
 # Table Of Contents
 1. **Exploring Android and the Android Studio IDE**
