@@ -30,6 +30,13 @@ public class BookmarksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmarks);
 
+        ArrayList<String> a = new ArrayList<>();
+
+        //Storing them in variables for later use
+        editText_title = findViewById(R.id.editText_title);
+        editText_URL = findViewById(R.id.editText_URL);
+        listView_bookmark = findViewById(R.id.listView_bookmark);
+
         //checks if there is anything in the savedInstanceState
         //savedInstanceState will be null the first time the activity opens
         //savedInstanceState will contain bookmarks info when the activity is redrawn
@@ -46,16 +53,14 @@ public class BookmarksActivity extends AppCompatActivity {
 
             //creates a new arraylist and put google in it
             arrayList_bookmark = new ArrayList<String>();
-            arrayList_bookmark.add("Google" +
-                    "\nhttp://www.google.com");
+            arrayList_bookmark.add("Google\nhttp://www.google.com");
         }
 
         //initialize the arrayadapter with a built-in layout and arrayList_bookmark
         arrayAdapter_bookmark = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, arrayList_bookmark);
 
-        //initialize the listView with the arrayAdapter
-        listView_bookmark = findViewById(R.id.listView_bookmark);
+        //set the listView with the arrayAdapter
         listView_bookmark.setAdapter(arrayAdapter_bookmark);
 
         //adding an onItemClickListener to the listView
@@ -93,10 +98,6 @@ public class BookmarksActivity extends AppCompatActivity {
                 startActivity(intentToOpenLink);
             }
         });
-
-        //Storing the editText in a variable for future use (instead of re-searching)
-        editText_title = (EditText) findViewById(R.id.editText_title);
-        editText_URL = (EditText) findViewById(R.id.editText_URL);
     }
 
     //android calls this before the onStop() is called
@@ -132,7 +133,7 @@ public class BookmarksActivity extends AppCompatActivity {
         } else {
             //logging
             Log.d(TAG, "onClick_addNewBookmark: input invalid");
-            
+
             Toast.makeText(this, "Please fill out the Title and URL boxes", Toast.LENGTH_LONG).show();
         }
 
