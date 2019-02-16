@@ -13,7 +13,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     //storing the views in variables is typically a good idea if you are going to use them a lot
     private TextView textView_splashAnswer;
-    private String currentText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
